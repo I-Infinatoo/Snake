@@ -5,8 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snake"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Snake" Height="500" Width="800"
+        Background="{StaticResource BackgroundColor}"
+        Foreground="{StaticResource TextColor}"
+        FontFamily="{StaticResource MainFont}"
+        WindowStartupLocation="CenterScreen"
+        Icon="Assets/icon.ico"
+        >
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="649*"/>
+            <ColumnDefinition Width="151*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <!--for top row : auto-->
+            <RowDefinition Height="auto"/>
+            <!--for bottom row : anything remaining-->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="ScoreText"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Text="Score 0"
+                   FontSize="22"
+                   Margin="354,0,0,0"/>
+
+        <!--for empty pos: empty asset : 0-->
+        <!--for snake pos: body asset : 1-->
+        <!--for food pos: food asset : 2-->
+
+        <Border x:Name="GridBorder"
+                Grid.Row="1"
+                BorderBrush="{StaticResource GridLineColor}"
+                BorderThickness="1.5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center" Margin="198,0,0,0">
+
+            <!--uniform grid for images playing area-->
+            <UniformGrid x:Name="GameGrid"
+                         Width="400"
+                         Height="400"
+                         Background="{StaticResource GridBackgroundColor}">
+
+            </UniformGrid>
+        </Border>
+
 
     </Grid>
 </Window>

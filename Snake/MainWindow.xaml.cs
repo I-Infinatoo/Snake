@@ -20,9 +20,15 @@ namespace Snake
     /// </summary>
     public partial class MainWindow : Window
     {
+        //number of rows and cols
+        private readonly int rows = 15, cols = 15;
+        private readonly Image[,] gridImage;
+
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        
     }
 }
