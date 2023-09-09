@@ -27,8 +27,32 @@ namespace Snake
         public MainWindow()
         {
             InitializeComponent();
+            gridImage = SetupGrid();
         }
 
+        // this will add control required by the grid
+        private Image[,] SetupGrid()
+        {
+            Image[,] images = new Image[rows, cols];
+            GameGrid.Rows = rows;
+            GameGrid.Columns = cols;
+
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < cols; c++) {
+                    
+                    // initially set empty images
+                    Image image = new Image { 
+                        Source = Images.Empty
+                    };
+
+                    images[r, c] = image;
+                    GameGrid.Children.Add(image);
+
+                }
+            }
+
+            return images;
+        }
         
     }
 }
