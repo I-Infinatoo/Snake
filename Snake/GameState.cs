@@ -18,8 +18,9 @@ namespace Snake
         // where is the snake right now
         // First element -> head of the snake
         // Last element -> tail of the snake
-        private readonly LinkedList<Position> snakePositions = new LinkedList<Position>();
-        private readonly Random random = new Random();
+        private readonly LinkedList<Position> _snakePositions = new LinkedList<Position>();
+        private LinkedList<Direction> _dirChangeBuffer = new LinkedList<Direction>();
+        private readonly Random _random = new Random();
 
         public GameState(int rows, int cols) {
             Rows = rows;
@@ -40,7 +41,7 @@ namespace Snake
             for (int c = 1; c <= 3; c++)
             {
                 Grid[r, c] = GridValue.Snake;
-                snakePositions.AddFirst(new Position(r, c));
+                _snakePositions.AddFirst(new Position(r, c));
             }
 
         }
@@ -49,7 +50,7 @@ namespace Snake
         // this method will return all empty grid positions
         private IEnumerable<Position> EmptyPositions() {
             for (int r = 0; r < Rows; r++) {
-                for (int c = 0; c <= Cols; c++) {
+                for (int c = 0; c < Cols; c++) {
                     if (Grid[r, c] == GridValue.Empty) {
                         yield return new Position(r, c);
                     }
@@ -67,7 +68,7 @@ namespace Snake
             }
 
             // pick a random empty position
-            Position pos = empty[random.Next(empty.Count)];
+            Position pos = empty[_random.Next(empty.Count)];
 
             Grid[pos.Row, pos.Col] = GridValue.Food;
 
@@ -75,35 +76,62 @@ namespace Snake
 
         public Position HeadPosition()
         {
-            return snakePositions.First.Value;
+            return _snakePositions.First.Value;
         }
 
         public Position TailPosition()
         {
-            return snakePositions.Last.Value;
+            return _snakePositions.Last.Value;
         }
 
         // this will return all the snake positions as the IEnumerable
         public IEnumerable<Position> SnakePositions()
         {
-            return snakePositions;
+            return _snakePositions;
         }
 
         private void AddHead(Position pos) {
-            snakePositions.AddFirst(pos);
+            _snakePositions.AddFirst(pos);
 
             //set the corresponding position to the grid array
             Grid[pos.Row, pos.Col] = GridValue.Snake;
         }
 
         private void RemoveTail() {
-            Position tail = snakePositions.Last.Value;
+            Position tail = _snakePositions.Last.Value;
             Grid[tail.Row, tail.Col] = GridValue.Empty;
-            snakePositions.RemoveLast();
+            _snakePositions.RemoveLast();
         }
 
-        public void ChangeDirection(Direction dir) { 
-            Dir = dir;
+        private Direction GetLastDirection()
+        {
+            // if buffer is empty, then consider the current direction
+            if (_dirChangeBuffer.Count == 0)
+            {
+                return Dir;
+            }
+
+            return _dirChangeBuffer.Last.Value;
+        }
+
+        private bool CanChangeDirection(Direction newDir)
+        {
+            // This is the max size of the buffer
+            if (_dirChangeBuffer.Count == 2)
+            {
+                return false;
+            }
+
+            Direction lastDir = GetLastDirection();
+            return lastDir != newDir && lastDir != newDir.Opposite();
+        }
+
+        public void ChangeDirection(Direction dir) {
+
+            if (CanChangeDirection(dir))
+            {
+                _dirChangeBuffer.AddLast(dir);
+            }
         }
 
         // will check whether outside of the grid or not
@@ -128,6 +156,12 @@ namespace Snake
 
         // move the snake
         public void Move() {
+
+            if (_dirChangeBuffer.Count > 0)
+            {
+                Dir = _dirChangeBuffer.First.Value;
+                _dirChangeBuffer.RemoveFirst();
+            }
 
             Position newHeadPos = HeadPosition().Translate(Dir);
             GridValue hit = WillHit(newHeadPos);
