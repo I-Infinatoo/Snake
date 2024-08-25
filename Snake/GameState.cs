@@ -73,11 +73,13 @@ namespace Snake
 
         }
 
-        public Position HeadPosition() {
+        public Position HeadPosition()
+        {
             return snakePositions.First.Value;
         }
 
-        public Position TailPosition() {
+        public Position TailPosition()
+        {
             return snakePositions.Last.Value;
         }
 
@@ -115,8 +117,8 @@ namespace Snake
             }
 
             // Case: The head is about to take the next block at which
-            // the tail is there, when the snake move the head will take
-            // the position of the tail
+            // the tail is there, when the snake move the head and will take
+            // the position of the tail.
             if (newHeadPos == TailPosition()) {
                 return GridValue.Empty;
             }
