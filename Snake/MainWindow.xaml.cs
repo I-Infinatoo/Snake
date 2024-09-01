@@ -70,7 +70,8 @@ namespace Snake
             Draw();
             Overlay.Visibility = Visibility.Hidden; // Hide the visibility of overlay
             await GameLoop();
-            
+            await ShowGameOver();
+            _gameState = new GameState(_rows, _cols);
         }
         private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -123,7 +124,7 @@ namespace Snake
         {
             while (!_gameState.GameOver)
             {
-                await Task.Delay(500);
+                await Task.Delay(100);
                 _gameState.Move();
                 Draw();
             }
@@ -152,8 +153,15 @@ namespace Snake
             for (int i = 3; i >= 1; --i)
             {
                 OverlayText.Text = i.ToString();
-                await Task.Delay(700);
+                await Task.Delay(500);
             }
+        }
+
+        private async Task ShowGameOver()
+        {
+            await Task.Delay(1000);
+            Overlay.Visibility = Visibility.Visible;
+            OverlayText.Text = "PRESS ANY KEY TO START";
         }
     }
 }
