@@ -52,7 +52,7 @@ namespace Snake
             Image[,] images = new Image[_rows, _cols];
             GameGrid.Rows = _rows;
             GameGrid.Columns = _cols;
-
+            GameGrid.Width = GameGrid.Height * (_cols / (double)_rows);
             for (int r = 0; r < _rows; r++) {
                 for (int c = 0; c < _cols; c++) {
                     // initially set empty images
