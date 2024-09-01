@@ -29,9 +29,15 @@ namespace Snake
             { GridValue.Food, Images.Food },
             { GridValue.Snake, Images.Body }
         };
+        private readonly Dictionary<Direction, int> dirToRotation = new()
+        {
+            {Direction.Up, 0},
+            {Direction.Right, 90},
+            {Direction.Down, 180},
+            {Direction.Left, 270}
+        };
         private GameState _gameState;
         private bool _gameRunning;
-        
         
         public MainWindow()
         {
@@ -49,18 +55,16 @@ namespace Snake
 
             for (int r = 0; r < _rows; r++) {
                 for (int c = 0; c < _cols; c++) {
-                    
                     // initially set empty images
                     Image image = new Image { 
-                        Source = Images.Empty
+                        Source = Images.Empty,
+                        // insures only head image is roated not its upper-left image in the grid
+                        RenderTransformOrigin = new Point(0.5,0.5)
                     };
-
                     images[r, c] = image;
                     GameGrid.Children.Add(image);
-
                 }
             }
-
             return images;
         }
 
@@ -133,6 +137,7 @@ namespace Snake
         private void Draw()
         {
             DrawGrid();
+            DrawSnakeHead();
             ScoreText.Text = $"SCORE {_gameState.Score}";
         }
 
@@ -144,8 +149,21 @@ namespace Snake
                 {
                     GridValue gridValue = _gameState.Grid[r, c];
                     _gridImage[r, c].Source = _gridValToImage[gridValue];
+                    //insures only head image gets rotated
+                    _gridImage[r,c].RenderTransform = Transform.Identity;
                 }
             }
+        }
+
+        private void DrawSnakeHead()
+        {
+            Position headPos = _gameState.HeadPosition();
+            Image image = _gridImage[headPos.Row, headPos.Col];
+            image.Source = Images.Head;
+
+            int rotation = dirToRotation[_gameState.Dir];
+            // Rotate the image by the amount of degree
+            image.RenderTransform = new RotateTransform(rotation);
         }
 
         private async Task ShowCountDown()
