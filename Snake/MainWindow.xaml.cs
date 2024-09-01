@@ -30,6 +30,7 @@ namespace Snake
             { GridValue.Snake, Images.Body }
         };
         private GameState _gameState;
+        private bool _gameRunning;
         
         
         public MainWindow()
@@ -63,13 +64,36 @@ namespace Snake
             return images;
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private async Task RunGame()
         {
+            await ShowCountDown();
             Draw();
+            Overlay.Visibility = Visibility.Hidden; // Hide the visibility of overlay
             await GameLoop();
             
         }
+        private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            /*
+             * By default, PreviewKeyDown then KeyDown event is called in a row, in case of event
+             * But by making e.Handled to true, it tells the eventHandler that it is already been handled
+             *  and no need to check further events in row 
+             */
+            if (Overlay.Visibility == Visibility.Visible)
+            {
+                e.Handled = true;
+            }
 
+            if (!_gameRunning)
+            {
+                _gameRunning = true;
+                await RunGame();
+                /*
+                 * Wait for game to get over, then make _gameRunning to false 
+                 */
+                _gameRunning = false;
+            }
+        }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             // if game is over then perform nothing on key press
@@ -120,6 +144,15 @@ namespace Snake
                     GridValue gridValue = _gameState.Grid[r, c];
                     _gridImage[r, c].Source = _gridValToImage[gridValue];
                 }
+            }
+        }
+
+        private async Task ShowCountDown()
+        {
+            for (int i = 3; i >= 1; --i)
+            {
+                OverlayText.Text = i.ToString();
+                await Task.Delay(700);
             }
         }
     }

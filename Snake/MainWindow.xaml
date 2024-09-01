@@ -5,52 +5,68 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Snake" Height="500" Width="800"
+        MinWidth="300" MinHeight="300"
         Background="{StaticResource BackgroundColor}"
         Foreground="{StaticResource TextColor}"
         FontFamily="{StaticResource MainFont}"
         WindowStartupLocation="CenterScreen"
         Icon="Assets/icon1.ico"
-        Loaded="Window_Loaded"
+        PreviewKeyDown="Window_PreviewKeyDown"
         KeyDown="Window_KeyDown">
-    <Grid>
- 
-        <Grid.RowDefinitions>
-            <!--for top row : auto-->
-            <RowDefinition Height="auto"/>
-            <!--for bottom row : anything remaining-->
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Viewbox>
+                <Grid>
+                        <Grid.RowDefinitions>
+                                <!--for top row : auto-->
+                                <RowDefinition Height="auto"/>
+                                <!--for bottom row : anything remaining-->
+                                <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
         
-        <TextBlock x:Name="ScoreText"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Text="Score 0"
-                   FontSize="22"
-                   Margin="10"/>
+                        <TextBlock x:Name="ScoreText"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="Score 0"
+                                   FontSize="22"
+                                   Margin="10"/>
 
-        <!--for empty pos: empty asset : 0-->
-        <!--for snake pos: body asset : 1-->
-        <!--for food pos: food asset : 2-->
+                        <!--for empty pos: empty asset : 0-->
+                        <!--for snake pos: body asset : 1-->
+                        <!--for food pos: food asset : 2-->
 
-        <Border x:Name="GridBorder"
-                Grid.Row="1"
-                BorderBrush="{StaticResource GridLineColor}"
-                BorderThickness="1.5"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                RenderOptions.EdgeMode="Aliased">
+                        <Border x:Name="GridBorder"
+                                Grid.Row="1"
+                                BorderBrush="{StaticResource GridLineColor}"
+                                BorderThickness="1.5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                RenderOptions.EdgeMode="Aliased"
+                                Margin="20,0,20,20">
 
-            <!--uniform grid for images playing area-->
-            <UniformGrid x:Name="GameGrid"
-                         Width="400"
-                         Height="400"
-                         Background="{StaticResource GridBackgroundColor}"
-                         SnapsToDevicePixels="True"
-                         RenderOptions.BitmapScalingMode="HighQuality">
+                                <!--uniform grid for images playing area-->
+                                <UniformGrid x:Name="GameGrid"
+                                             Width="400"
+                                             Height="400"
+                                             Background="{StaticResource GridBackgroundColor}"
+                                             SnapsToDevicePixels="True"
+                                             RenderOptions.BitmapScalingMode="HighQuality">
 
-            </UniformGrid>
-        </Border>
-
-
-    </Grid>
+                                </UniformGrid>
+                        </Border>
+                        
+                        <Border x:Name="Overlay"
+                                Grid.Row="1" 
+                                Background="{StaticResource OverlayColor}"
+                                Width="{Binding Path=ActualWidth, ElementName=GridBorder}"
+                                Height="{Binding Path=ActualWidth, ElementName=GridBorder}"
+                                Margin="{Binding Path=Margin, ElementName=GridBorder}"
+                                RenderOptions.EdgeMode="Aliased">
+                                <TextBlock x:Name="OverlayText"
+                                           Text="PRESS ANY KEY TO START"
+                                           FontSize="26"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"></TextBlock>
+                        </Border>
+                </Grid>
+        </Viewbox>
 </Window>

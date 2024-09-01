@@ -185,8 +185,6 @@ namespace Snake
                 Score++;
                 AddFood();
             }
-
-
         }
     }
 }
